@@ -1,4 +1,4 @@
-// Zak's javascript bubble sort function:
+// Zak's javascript bubble sort:
 
 // Create an array of random numbers between 1 and 10
 function createRandomArray(itemNum) {
