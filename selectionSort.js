@@ -32,9 +32,7 @@ function selectionSort(array) {
       }
 
     }
-    // After you've swapped currentSortIndex and
-    // minIndex, increment currentSortIndex to move
-    // on to the next position.
+    // Swap the array values at currentSortIndex and minIndex
     var temp = array[currentSortIndex];
     array[currentSortIndex] = array[minIndex];
     array[minIndex] = temp;
