@@ -26,8 +26,8 @@ function insertionSort(array) {
             // loop backwards through the array, starting from i.
             // move everything in the array forward 1 position
             // until the saved variable is greater than one the
-            // number at the current position. Insert saved
-            // variable between the two
+            // number at the [j-1] position. Replace the number at
+            // [j] with what's in temp.
             for (j = i; j > 0 && temp < array[j-1]; j--) {
                 array[j] = array[j - 1];
             }
