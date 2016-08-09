@@ -60,38 +60,79 @@ class LinkedList(object):
             newNode.prev = self.tail
             self.tail = newNode
 
-    # Insert node is NOT zero indexed!
-    def insertNode(self, data, position):
+    # Insert node will insert a node AFTER the specified position, starting
+    # from 0. If there's no param supplied, set as new head (not implemented)
+    def insertNode(self, data, position):  # position=self.size()):
         newNode = Node(data)
         node = self.head.jumpNext(position)
-        node.getNext().prev = newNode
-        node.next = newNode
-        newNode.prev = node
-        newNode.next = node.getNext()
+        # Checks to make sure we're not already in the last position.
+        # If so, set the prev value, otherwise set the new node to tail.
+        if node.getNext() is not None:
+            newNode.next = node.getNext()
+            node.getNext().prev = newNode
+            newNode.prev = node
+            node.next = newNode
+        else:
+            newNode.prev = node
+            node.next = newNode
+            self.tail = newNode
 
     def size(self):
         # Pass through nodes, incrementing numNodes until you reach the end
-        node = self.head
-        numNodes = 1
+        # Currently it doesn't return 0 on an empty list lol.
+        # maybe `if self.head is not None: ... else: return 0`
+        if self.head is not None:
+            node = self.head
+            numNodes = 1
+        else:
+            return 0
         while node.getNext() is not None:
             numNodes += 1
             node = node.getNext()
             return numNodes
 
+    # Gotta think about this one... You should be able to search through the
+    # data in each node, but would you return the node info for each that
+    # matches?
     def search(self):
         pass
 
     # Can I actually delete a node? This just removes reference of it from
-    # the list. Is there a way to delete the pointer? Call garbage collection?
+    # the list. Is there a way to delete the object? Call garbage collection?
     def delete(self, position):
         node = self.head.jumpNext(position)
-        node.getPrev.next = node.getNext()
-        node.getNext.prev = node.getPrev()
+        # If there's no next or previous, we're at head or tail and must
+        # reset those attributes
+        if node.getPrev() is not None:
+            node.getPrev().next = node.getNext()
+        else:
+            self.head = node.getNext()
+        if node.getNext() is not None:
+            node.getNext().prev = node.getPrev()
+        else:
+            self.tail = node.getPrev()
         # node.garbageDay()
 
     def printAll(self):
-        pass
+        node = self.head
+        i = 0
+        while i <= self.size():
+            print "Node {0}: {1}".format(i, node.data)
+            node = node.getNext()
+            i += 1
 
 # Some nodes to play around with:
 list = LinkedList()
-list.addNode(18)
+list.addNode("first")
+list.addNode("second")
+list.addNode("third")
+
+list.insertNode("second.2", 2)
+# list.insertNode("without a position, this should default to the end")
+
+list.printAll()
+
+print "About to delete position 3.."
+list.delete(3)
+
+list.printAll()
