@@ -89,7 +89,7 @@ class LinkedList(object):
         while node.getNext() is not None:
             numNodes += 1
             node = node.getNext()
-            return numNodes
+        return numNodes
 
     # Gotta think about this one... You should be able to search through the
     # data in each node, but would you return the node info for each that
@@ -97,8 +97,6 @@ class LinkedList(object):
     def search(self):
         pass
 
-    # Can I actually delete a node? This just removes reference of it from
-    # the list. Is there a way to delete the object? Call garbage collection?
     def delete(self, position):
         node = self.head.jumpNext(position)
         # If there's no next or previous, we're at head or tail and must
@@ -116,7 +114,7 @@ class LinkedList(object):
     def printAll(self):
         node = self.head
         i = 0
-        while i <= self.size():
+        while i < self.size():
             print "Node {0}: {1}".format(i, node.data)
             node = node.getNext()
             i += 1
@@ -127,8 +125,8 @@ list.addNode("first")
 list.addNode("second")
 list.addNode("third")
 
-list.insertNode("second.2", 2)
-# list.insertNode("without a position, this should default to the end")
+list.insertNode("second.2", 1)
+# list.insertNode("without a position, this should default to the beginning")
 
 list.printAll()
 
