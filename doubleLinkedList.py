@@ -3,6 +3,9 @@
 #    search,
 #    delete,
 #    some sorting/insert at position
+#
+# Is there a way to implement getNext(4) to jump ahead 4 times?
+# I am not so sure since I have to use return. Maybe with recursion.
 
 
 # Nodes have a next and previous attribute, and contain a data attribute
@@ -18,6 +21,13 @@ class Node(object):
 
     def getNext(self):
         return self.next
+
+    def jumpNext(self, int=1):
+        node = self
+        while int > 0:
+            node = node.getNext()
+            int -= 1
+        return node
 
     def getPrev(self):
         return self.prev
@@ -47,6 +57,14 @@ class LinkedList(object):
             newNode.prev = self.tail
             self.tail = newNode
 
+    # Insert node is NOT zero indexed!
+    # this uses Node.next(int), which has NOT been tested yet!
+    def insertNode(self, data, position):
+        newNode = Node(data)
+        node = self.head.jumpNext(position)
+        node.getNext().prev = newNode
+        node.next = newNode
+
     def size(self):
         # Pass through nodes, incrementing numNodes until you reach the end
         node = self.head
@@ -59,7 +77,15 @@ class LinkedList(object):
     def search(self):
         pass
 
-    def delete(self):
+    # Can I actually delete a node? This just removes reference of it from
+    # the list. Is there a way to delete the pointer? Call garbage collection?
+    def delete(self, position):
+        node = self.head.jumpNext(position)
+        node.getPrev.next = node.getNext()
+        node.getNext.prev = node.getPrev()
+        # node.garbageDay()
+
+    def printAll(self):
         pass
 
 # Some nodes to play around with:
