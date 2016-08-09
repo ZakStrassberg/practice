@@ -2,10 +2,6 @@
 # To-do:
 #    search,
 #    delete,
-#    some sorting/insert at position
-#
-# Is there a way to implement getNext(4) to jump ahead 4 times?
-# I am not so sure since I have to use return. Maybe with recursion.
 
 
 # Nodes have a next and previous attribute, and contain a data attribute
@@ -31,6 +27,13 @@ class Node(object):
 
     def getPrev(self):
         return self.prev
+
+    def jumpPrev(self, int=1):
+        node = self
+        while int > 0:
+            node = node.getPrev()
+            int -= 1
+        return node
 
 
 # LinkedList class contains head and tail attributes
@@ -58,12 +61,13 @@ class LinkedList(object):
             self.tail = newNode
 
     # Insert node is NOT zero indexed!
-    # this uses Node.next(int), which has NOT been tested yet!
     def insertNode(self, data, position):
         newNode = Node(data)
         node = self.head.jumpNext(position)
         node.getNext().prev = newNode
         node.next = newNode
+        newNode.prev = node
+        newNode.next = node.getNext()
 
     def size(self):
         # Pass through nodes, incrementing numNodes until you reach the end
