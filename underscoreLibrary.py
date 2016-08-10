@@ -1,11 +1,8 @@
 class Underscore(object):
     def map(self, list, iteratee):
-        mappedList = []
-        for each in list:
-            mappedList.append(iteratee(each))
-        return mappedList
+        return [iteratee(each) for each in list]
 
-    def reduce(self):
+    def reduce(self, list, iteratee, *memo):
         pass
 
     def find(self):
