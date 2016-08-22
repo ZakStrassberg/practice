@@ -1,0 +1,31 @@
+<html>
+	<head>
+		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			google.charts.load("current", {packages:["map"]});
+			google.charts.setOnLoadCallback(drawChart);
+			function drawChart() {
+				rawdata = [['Lat', 'Long', 'Name']]
+				$.get("https://data.sfgov.org/api/views/2e7e-i7me/rows.json", function(res) {
+					for (i = 0; i < res.data.length; i++) {
+						rawdata.push(
+							[parseFloat(res.data[i][18][1]), parseFloat(res.data[i][18][2]), 'test']
+						)
+					}
+					console.log(res.data.length)
+					var data = google.visualization.arrayToDataTable(rawdata);
+
+					var map = new google.visualization.Map(document.getElementById('map_div'));
+					map.draw(data, {showTip: true});
+				}, "json");
+			}
+
+		</script>
+	</head>
+
+	<body>
+		<div id="map_div" style="height: 100%"></div>
+	</body>
+</html>
