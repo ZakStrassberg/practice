@@ -1,31 +1,130 @@
-<html>
+<!DOCTYPE html>
+<html >
 	<head>
-		<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-		<script type="text/javascript">
-			google.charts.load("current", {packages:["map"]});
-			google.charts.setOnLoadCallback(drawChart);
-			function drawChart() {
-				rawdata = [['Lat', 'Long', 'Name']]
-				$.get("https://data.sfgov.org/api/views/2e7e-i7me/rows.json", function(res) {
-					for (i = 0; i < res.data.length; i++) {
-						rawdata.push(
-							[parseFloat(res.data[i][18][1]), parseFloat(res.data[i][18][2]), 'test']
-						)
-					}
-					console.log(res.data.length)
-					var data = google.visualization.arrayToDataTable(rawdata);
-
-					var map = new google.visualization.Map(document.getElementById('map_div'));
-					map.draw(data, {showTip: true});
-				}, "json");
+		<meta charset="UTF-8">
+		<title>SF bike lanes and racks</title>
+		<style>
+			html, body, #map-canvas {
+				height: 100%;
+				margin: 0;
+				padding: 0;
 			}
-
-		</script>
+		</style>
 	</head>
+	<div id="map-canvas"></div>
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/js-marker-clusterer/1.0.0/markerclusterer_compiled.js'></script>
+	<script src='https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false'></script>
+	<script>
+		var map;
 
-	<body>
-		<div id="map_div" style="height: 100%"></div>
-	</body>
+		// The JSON data
+		var json = [];
+
+		function initialize() {
+
+			// Giving the map some options
+			var mapOptions = {
+				zoom: 12,
+				center: new google.maps.LatLng(37.7749, -122.4194)
+			};
+
+			// Creating the map
+			map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+			// Looping through all the entries from the JSON data
+			markers = [];
+			for (var i = 0; i < json.length; i++) {
+
+				// Current object
+				var obj = json[i];
+
+				// Adding a new marker for the object
+				var marker = new google.maps.Marker({
+					position: new google.maps.LatLng(obj.latitude, obj.longitude),
+					map: map,
+					title: obj.title // this works, giving the marker a title with the correct title
+				});
+				markers.push(marker)
+
+				// Adding a new info window for the object
+				// var clicker = addClicker(marker, obj.title);
+
+			} // end loop
+
+			// Adding a new click event listener for the object
+			<!-- function addClicker(marker, content) { -->
+			<!-- 	google.maps.event.addListener(marker, 'click', function() { -->
+
+			<!-- 		if (infowindow) { -->
+			<!-- 			infowindow.close(); -->
+			<!-- 		} -->
+			<!-- 		infowindow = new google.maps.InfoWindow({ -->
+			<!-- 			content: content -->
+			<!-- 		}); -->
+			<!-- 		infowindow.open(map, marker); -->
+
+			<!-- 	}); -->
+			<!-- } -->
+
+			var mc = new MarkerClusterer(map, markers, {
+				imagePath: 'https://cdn.rawgit.com/googlemaps/js-marker-clusterer/gh-pages/images/m'
+			});
+
+			var flightPathCoordinates = [{
+				lat: 37.77432755078522,
+				lng: -122.3916341355079
+			}, {
+				lat: 37.77415200898353,
+				lng: -122.39157646352207
+			}, {
+				lat: 37.77397501912583,
+				lng: -122.39152630399795
+			},{
+				lat: 37.77361750926679,
+				lng: -122.39144873473583
+			},{
+				lat: 37.77397501912583,
+				lng: -122.39152630399795
+			}, {
+				lat: 37.773466921566,
+				lng: -122.39143433539678
+			}];
+
+			flightPath = new google.maps.Polyline({
+				path: flightPathCoordinates,
+				strokeColor: '#FF0000',
+				strokeOpacity: 1.0,
+				strokeWeight: 2
+			});
+			flightPath.setMap(map);
+		}
+
+		// Initialize the map
+		$(document).ready(function() {
+			$.getJSON(
+				'https://data.sfgov.org/api/views/2e7e-i7me/rows.json',
+				function(data) {
+					jsondata = data.data;
+					var length = jsondata.length;
+					for (i = 0; i < length; i++) {
+						json.push({
+							"id": i,
+							"title": "Bike rack",
+							"longitude": jsondata[i][18][2],
+							"latitude": jsondata[i][18][1]
+						})
+					}
+					initialize();
+				}
+			);
+
+		});
+	</script>
+
+
+
+
+</body>
 </html>
+
